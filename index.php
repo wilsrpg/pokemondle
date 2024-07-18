@@ -4,6 +4,13 @@
 //echo session_id();
 require 'vendor/autoload.php';
 session_start();
+
+
+if(isset($_POST['continuar'])) {
+  header('Location: pokedle.php');
+  die();
+}
+
 //if(isset($_SESSION['mensagem']))
 //  echo $_SESSION['mensagem'];
 //unset($_SESSION);
@@ -21,13 +28,13 @@ session_start();
 
 Pokédle+<br>
 
-<form action="pokedle.php" method="POST">
+<form action="index.php" method="POST">
   <input type="submit" name="continuar" <?php if (empty($_SESSION['seed'])) echo 'disabled'?> value="Continuar jogo anterior">
 </form>
 
 <form action="pokedle.php" method="POST">
   Selecione as gerações para jogar:<br>
-  <input name="geracoes" autofocus
+  <input name="geracoes" autofocus placeholder="ex.: 1,3,5"
     title="As gerações que serão válidas na partida. Apenas números de 1 a 9, separados por vírgula."
   ><br>
   Geração do contexto:<br>

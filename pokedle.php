@@ -1,12 +1,20 @@
 <?php
 require 'vendor/autoload.php';
 session_start();
+
+if(isset($_POST['voltar'])) {
+  header('Location: index.php');
+  die();
+}
+
 //var_dump($_SESSION);
 //echo '<br>';
 $URL_BASE = 'http://localhost/pokedle-api/pokedle-api/v1';
 //$URL_BASE = 'https://wilsrpg.42web.io/pokedle-api/pokedle-api/v1';
-//$URL_BASE = 'https://wilsrpg.unaux.com/pokedle-api/v1';
-$cookieFile = getcwd().'\dados\cookie.txt';
+//$URL_BASE = 'http://wilsrpg.unaux.com/pokedle-api/v1';
+//$URL_BASE = 'https://wilsrpg.x10.mx/pokedle-api/v1';
+$TIMEOUT = 15;
+$cookieFile = getcwd().'/cookies/cookie.txt';
 
 $seed = 0;
 $geracoes = '';
@@ -41,12 +49,13 @@ if(isset($_POST['novo'])) {
   $curl = curl_init();
   curl_setopt($curl, CURLOPT_COOKIEJAR, $cookieFile);  //tell cUrl where to write cookie data
   curl_setopt($curl, CURLOPT_COOKIEFILE, $cookieFile); //tell cUrl where to read cookie data from
+  //curl_setopt($curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
   curl_setopt_array($curl, [
     CURLOPT_RETURNTRANSFER => 1,
     CURLOPT_URL => $URL_BASE.'/jogo',
     CURLOPT_POST => 2,
     CURLOPT_POSTFIELDS => ['geracoes' => $geracoes, 'geracao_contexto' => $geracao_contexto],
-    CURLOPT_TIMEOUT => 10,
+    CURLOPT_TIMEOUT => $TIMEOUT,
     //CURLOPT_COOKIE => 'PHPSESSID='.$_COOKIE['PHPSESSID']
   ]);
   $response = json_decode(curl_exec($curl));
@@ -81,10 +90,11 @@ if (empty($_SESSION['pokemons'])) {
   $curl = curl_init();
   curl_setopt($curl, CURLOPT_COOKIEJAR, $cookieFile);  //tell cUrl where to write cookie data
   curl_setopt($curl, CURLOPT_COOKIEFILE, $cookieFile); //tell cUrl where to read cookie data from
+  //curl_setopt($curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
   curl_setopt_array($curl, [
     CURLOPT_RETURNTRANSFER => 1,
     CURLOPT_URL => $URL_BASE.'/pokemons',
-    CURLOPT_TIMEOUT => 10,
+    CURLOPT_TIMEOUT => $TIMEOUT,
     //CURLOPT_COOKIE => 'PHPSESSID='.$_COOKIE['PHPSESSID']
   ]);
   $response = json_decode(curl_exec($curl));
@@ -111,12 +121,13 @@ if (isset($_POST['palpite']) && $_SESSION['descobriu'] == false) {
   $curl = curl_init();
   curl_setopt($curl, CURLOPT_COOKIEJAR, $cookieFile);  //tell cUrl where to write cookie data
   curl_setopt($curl, CURLOPT_COOKIEFILE, $cookieFile); //tell cUrl where to read cookie data from
+  //curl_setopt($curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
   curl_setopt_array($curl, [
     CURLOPT_RETURNTRANSFER => 1,
     CURLOPT_URL => $URL_BASE.'/palpites',
     CURLOPT_POST => 1,
     CURLOPT_POSTFIELDS => ['pokemon' => $_POST['palpite']],
-    CURLOPT_TIMEOUT => 10,
+    CURLOPT_TIMEOUT => $TIMEOUT,
     //CURLOPT_COOKIE => 'PHPSESSID='.$_COOKIE['PHPSESSID']
   ]);
   $response = json_decode(curl_exec($curl));
@@ -138,10 +149,11 @@ if (empty($_SESSION['palpites'])) {
   $curl = curl_init();
   curl_setopt($curl, CURLOPT_COOKIEJAR, $cookieFile);  //tell cUrl where to write cookie data
   curl_setopt($curl, CURLOPT_COOKIEFILE, $cookieFile); //tell cUrl where to read cookie data from
+  //curl_setopt($curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
   curl_setopt_array($curl, [
     CURLOPT_RETURNTRANSFER => 1,
     CURLOPT_URL => $URL_BASE.'/palpites',
-    CURLOPT_TIMEOUT => 10,
+    CURLOPT_TIMEOUT => $TIMEOUT,
     //CURLOPT_COOKIE => 'PHPSESSID='.$_COOKIE['PHPSESSID']
   ]);
   $response = json_decode(curl_exec($curl));
@@ -173,10 +185,11 @@ if (empty($_SESSION['descobriu'])) {
   $curl = curl_init();
   curl_setopt($curl, CURLOPT_COOKIEJAR, $cookieFile);  //tell cUrl where to write cookie data
   curl_setopt($curl, CURLOPT_COOKIEFILE, $cookieFile); //tell cUrl where to read cookie data from
+  //curl_setopt($curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
   curl_setopt_array($curl, [
     CURLOPT_RETURNTRANSFER => 1,
     CURLOPT_URL => $URL_BASE.'/jogo',
-    CURLOPT_TIMEOUT => 10,
+    CURLOPT_TIMEOUT => $TIMEOUT,
     //CURLOPT_COOKIE => 'PHPSESSID='.$_COOKIE['PHPSESSID']
   ]);
   $response = json_decode(curl_exec($curl));
@@ -232,8 +245,9 @@ foreach ($nomes as $p)
 
 Pokédle+<br>
 seed: [<?php echo $seed; ?>], gerações: [<?php echo implode(',', $geracoes); ?>], contexto: [<?php echo $geracao_contexto; ?>ª geração]<br>
-<form action="index.php" method="POST">
-<input type="submit" value="Voltar">
+
+<form action="pokedle.php" method="POST">
+  <input type="submit" name="voltar" value="Voltar">
 </form>
 
 <label for="palpite">Pokémon:</label><br>
