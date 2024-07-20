@@ -17,7 +17,7 @@ if(isset($_POST['continuar'])) {
 ?>
 
 <!DOCTYPE html>
-<html lang="pt-br"> 
+<html lang="pt-br">
   <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
