@@ -32,7 +32,7 @@ Pokédle+<br>
   <input type="submit" name="continuar" <?php if (empty($_SESSION['seed'])) echo 'disabled'?> value="Continuar jogo anterior">
 </form>
 
-<form action="pokedle.php" method="POST">
+<form method="POST">
   Selecione as gerações para jogar:<br>
   <input name="geracoes" autofocus placeholder="ex.: 1,3,5"
     title="As gerações que serão válidas na partida. Apenas números de 1 a 9, separados por vírgula."
@@ -49,8 +49,10 @@ Pokédle+<br>
     echo '<option value="'.($i+1).'">'.($i+1).' ('.$jogos[$i].')</option>';
   ?>
   </select><br><br>
-  <input type="submit" name="novo" value="Novo jogo">
+  <input type="submit" formaction="pokedle.php" name="novo" value="Novo jogo">
   <input type="reset" value="Limpar">
+  <br>
+  <input type="submit" formaction="pokedle-moves.php" name="novo" value="Novo jogo - Técnicas">
 </form>
 <br>
 
