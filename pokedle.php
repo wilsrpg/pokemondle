@@ -77,6 +77,9 @@ if(isset($_POST['novo'])) {
   }
 
   $_SESSION['seed'] = $response->seed;
+  $_SESSION['jogo'] = $response->jogo;
+  $_SESSION['geracoes'] = $response->geracoes;
+  $_SESSION['geracao_contexto'] = $response->geracao_contexto;
   $seed = $_SESSION['seed'];
   $palpites = [];
   $pokemons = [];
@@ -84,6 +87,8 @@ if(isset($_POST['novo'])) {
   unset($_SESSION['palpites']);
   unset($_SESSION['pokemons']);
   unset($_SESSION['descobriu']);
+  unset($_SESSION['ids']);
+  unset($_SESSION['sprites']);
 }
 
 if (empty($_SESSION['pokemons'])) {
@@ -126,7 +131,7 @@ if (isset($_POST['palpite']) && $_SESSION['descobriu'] == false) {
     CURLOPT_RETURNTRANSFER => 1,
     CURLOPT_URL => $URL_BASE.'/palpites',
     CURLOPT_POST => 1,
-    CURLOPT_POSTFIELDS => ['pokemon' => $_POST['palpite']],
+    CURLOPT_POSTFIELDS => ['palpite' => $_POST['palpite']],
     CURLOPT_TIMEOUT => $TIMEOUT,
     //CURLOPT_COOKIE => 'PHPSESSID='.$_COOKIE['PHPSESSID']
   ]);
@@ -220,7 +225,7 @@ if (empty($_SESSION['descobriu'])) {
 $nomes_dos_pokemons_palpitados = array_map(function($p) {return $p->nome;}, $palpites);
 $nomes = array_diff($pokemons, $nomes_dos_pokemons_palpitados);
 
-if (isset($pokemon->id_c) && $pokemon->id_c === 1) {
+if (isset($pokemon->id_r) && $pokemon->id_r === 1) {
   $descobriu = true;
   $_SESSION["descobriu"] = true;
 }
@@ -280,20 +285,20 @@ foreach($palpites as $pp) {
   echo '
   <tr>
     <td><img src="'.$_SESSION['sprites'][array_search($pp->id,$_SESSION['ids'])].'"</td>
-    <td style="background-color: '.($pp->nome_c ? 'lime' : 'red').';">'
+    <td style="background-color: '.($pp->nome_r ? 'lime' : 'red').';">'
     .$pp->nome.'</td>
-    <td style="background-color: '.($pp->tipo1_c === 1 ? 'lime' : ($pp->tipo1_c === 2 ? 'yellow' : 'red')).';">'
+    <td style="background-color: '.($pp->tipo1_r === 1 ? 'lime' : ($pp->tipo1_r === 2 ? 'yellow' : 'red')).';">'
     .$pp->tipo1.'</td>
-    <td style="background-color: '.($pp->tipo2_c === 1 ? 'lime' : ($pp->tipo2_c === 2 ? 'yellow' : 'red')).';">'
+    <td style="background-color: '.($pp->tipo2_r === 1 ? 'lime' : ($pp->tipo2_r === 2 ? 'yellow' : 'red')).';">'
     .$pp->tipo2.'</td>
-    <td style="background-color: '.($pp->cor_c ? 'lime' : 'red').';">'
+    <td style="background-color: '.($pp->cor_r ? 'lime' : 'red').';">'
     .$pp->cor.'</td>
-    <td style="background-color: '.($pp->evoluido_c ? 'lime' : 'red').';">'
+    <td style="background-color: '.($pp->evoluido_r ? 'lime' : 'red').';">'
     .$pp->evoluido.'</td>
-    <td style="background-color: '.($pp->altura_c === 1 ? 'lime' : 'red').';">'
-    .($pp->altura_c === 2 ? '<' : ($pp->altura_c === 0 ? '>' : '')).($pp->altura).'m</td>
-    <td style="background-color: '.($pp->peso_c === 1 ? 'lime' : 'red').';">'
-    .($pp->peso_c === 2 ? '<' : ($pp->peso_c === 0 ? '>' : '')).($pp->peso).'kg</td>
+    <td style="background-color: '.($pp->altura_r === 1 ? 'lime' : 'red').';">'
+    .($pp->altura_r === 2 ? '<' : ($pp->altura_r === 0 ? '>' : '')).($pp->altura).'m</td>
+    <td style="background-color: '.($pp->peso_r === 1 ? 'lime' : 'red').';">'
+    .($pp->peso_r === 2 ? '<' : ($pp->peso_r === 0 ? '>' : '')).($pp->peso).'kg</td>
   </tr>
   ';
 }
