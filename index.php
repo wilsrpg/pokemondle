@@ -5,10 +5,16 @@
 require 'vendor/autoload.php';
 session_start();
 
-
 if(isset($_POST['continuar'])) {
-  header('Location: pokedle.php');
+  if ($_SESSION['jogo'] == 'pokedle')
+    header('Location: pokedle.php');
+  else if ($_SESSION['jogo'] == 'pokedle-moves')
+    header('Location: pokedle-moves.php');
   die();
+}
+
+if(isset($_POST['excluir'])) {
+  unset($_SESSION);
 }
 
 //if(isset($_SESSION['mensagem']))
@@ -30,6 +36,7 @@ Pokédle+<br>
 
 <form action="index.php" method="POST">
   <input type="submit" name="continuar" <?php if (empty($_SESSION['seed'])) echo 'disabled'?> value="Continuar jogo anterior">
+  <input type="submit" name="excluir" <?php if (empty($_SESSION['seed'])) echo 'disabled'?> value="Excluir jogo em andamento">
 </form>
 
 <form method="POST">
@@ -49,10 +56,9 @@ Pokédle+<br>
     echo '<option value="'.($i+1).'">'.($i+1).' ('.$jogos[$i].')</option>';
   ?>
   </select><br><br>
-  <input type="submit" formaction="pokedle.php" name="novo" value="Novo jogo">
-  <input type="reset" value="Limpar">
+  <input type="submit" formaction="pokedle.php" name="novo" value="Novo jogo - Pokémon">
   <br>
-  <input type="submit" formaction="pokedle-moves.php" name="novo" value="Novo jogo - Técnicas">
+  <input type="submit" formaction="pokedle-moves.php" name="novo" value="Novo jogo - Técnica">
 </form>
 <br>
 
