@@ -36,7 +36,7 @@ Pokédle+<br>
 
 <form action="index.php" method="POST">
   <input type="submit" name="continuar" <?php if (empty($_SESSION['seed'])) echo 'disabled'?> value="Continuar jogo anterior">
-  <input type="submit" name="excluir" <?php if (empty($_SESSION['seed'])) echo 'disabled'?> value="Excluir jogo em andamento">
+  <input type="submit" name="excluir" <?php if (empty($_SESSION['seed'])) echo 'disabled'?> value="Excluir jogo atual">
 </form>
 
 <form method="POST">
