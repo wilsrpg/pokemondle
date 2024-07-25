@@ -104,6 +104,7 @@ if (empty($_SESSION['tecnicas'])) {
     die();
   }
   $_SESSION['tecnicas'] = $response->nomes_das_tecnicas_das_geracoes_selecionadas;
+  sort($_SESSION['tecnicas']);
   $tecnicas = $_SESSION['tecnicas'];
 }
 
