@@ -16,10 +16,6 @@ if(isset($_POST['continuar'])) {
 if(isset($_POST['excluir'])) {
   unset($_SESSION);
 }
-
-//if(isset($_SESSION['mensagem']))
-//  echo $_SESSION['mensagem'];
-//unset($_SESSION);
 ?>
 
 <!DOCTYPE html>
@@ -60,11 +56,11 @@ Pokédle+<br>
   <br>
   <input type="submit" formaction="pokedle-moves.php" name="novo" value="Novo jogo - Técnica">
 </form>
-<br>
 
 <?php
 if (!empty($_SESSION['mensagem'])) {
-  echo "<script>alert('{$_SESSION['mensagem']}')</script>";
+  echo $_SESSION['mensagem'];
+  //echo "<script>alert('{$_SESSION['mensagem']}')</script>";
   unset($_SESSION['mensagem']);
 }
 ?>

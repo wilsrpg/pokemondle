@@ -228,6 +228,7 @@ $nomes = array_diff($pokemons, $nomes_dos_pokemons_palpitados);
 if (isset($pokemon->id_r) && $pokemon->id_r === 1) {
   $descobriu = true;
   $_SESSION["descobriu"] = true;
+  $erro = 'Parabéns! Você descobriu o pokémon!';
 }
 ?>
 
@@ -306,8 +307,8 @@ foreach($palpites as $pp) {
 </table>
 
 <?php
-if ($descobriu && isset($_POST['palpite']))
-  echo "<script>alert('Parabéns! Você descobriu o pokémon!')</script>";
+//if ($descobriu && isset($_POST['palpite']))
+//  echo "<script>alert('Parabéns! Você descobriu o pokémon!')</script>";
 ?>
 
 </body>

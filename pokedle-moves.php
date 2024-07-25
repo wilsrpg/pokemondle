@@ -198,6 +198,7 @@ $nomes = array_diff($tecnicas, $nomes_das_tecnicas_palpitadas);
 if (isset($tecnica->id_r) && $tecnica->id_r === 1) {
   $descobriu = true;
   $_SESSION["descobriu"] = true;
+  $erro = 'Parabéns! Você descobriu a técnica!';
 }
 ?>
 
@@ -283,8 +284,8 @@ foreach($palpites as $pp) {
 </table>
 
 <?php
-if ($descobriu && isset($_POST['palpite']))
-  echo "<script>alert('Parabéns! Você descobriu a técnica!')</script>";
+//if ($descobriu && isset($_POST['palpite']))
+//  echo "<script>alert('Parabéns! Você descobriu a técnica!')</script>";
 ?>
 
 </body>
