@@ -2,9 +2,26 @@
 require 'vendor/autoload.php';
 session_start();
 
-if(isset($_POST['voltar'])) {
+if (isset($_POST['voltar'])) {
   header('Location: index.php');
   die();
+}
+
+if (empty($_POST['geracoes'])) {
+  if (isset($_SESSION['seed']) && $_SESSION['seed'] != date("Ymd")) {
+    unset($_SESSION);
+    header('Location: index.php');
+    die();
+  }
+
+  if (empty($_SESSION['modo'])) {
+    header('Location: index.php');
+    die();
+  } else if ($_SESSION['modo'] != 'tecnica') {
+    $_SESSION['mensagem'] = 'Já existe um jogo em andamento.';
+    header('Location: index.php');
+    die();
+  }
 }
 
 $URL_BASE = 'http://localhost/pokedle-api/pokedle-moves-api/v1';
@@ -39,7 +56,7 @@ if (isset($_SESSION['geracoes']))
 if (isset($_SESSION['geracao_contexto']))
   $geracao_contexto = $_SESSION['geracao_contexto'];
 
-if(isset($_POST['novo'])) {
+if(isset($_POST['geracoes'])) {
   $geracoes = $_POST['geracoes'];
   if (isset($_POST['geracao_contexto']))
     $geracao_contexto = $_POST['geracao_contexto'];
@@ -68,7 +85,7 @@ if(isset($_POST['novo'])) {
   }
 
   $_SESSION['seed'] = $response->seed;
-  $_SESSION['jogo'] = $response->jogo;
+  $_SESSION['modo'] = $response->modo;
   $_SESSION['geracoes'] = $response->geracoes;
   $_SESSION['geracao_contexto'] = $response->geracao_contexto;
   $seed = $_SESSION['seed'];

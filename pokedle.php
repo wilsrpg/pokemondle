@@ -2,13 +2,28 @@
 require 'vendor/autoload.php';
 session_start();
 
-if(isset($_POST['voltar'])) {
+if (isset($_POST['voltar'])) {
   header('Location: index.php');
   die();
 }
 
-//var_dump($_SESSION);
-//echo '<br>';
+if (empty($_POST['geracoes'])) {
+  if (isset($_SESSION['seed']) && $_SESSION['seed'] != date("Ymd")) {
+    unset($_SESSION);
+    header('Location: index.php');
+    die();
+  }
+
+  if (empty($_SESSION['modo'])) {
+    header('Location: index.php');
+    die();
+  } else if ($_SESSION['modo'] != 'pokemon') {
+    $_SESSION['mensagem'] = 'Já existe um jogo em andamento.';
+    header('Location: index.php');
+    die();
+  }
+}
+
 $URL_BASE = 'http://localhost/pokedle-api/pokedle-api/v1';
 //$URL_BASE = 'https://wilsrpg.42web.io/pokedle-api/pokedle-api/v1';
 //$URL_BASE = 'http://wilsrpg.unaux.com/pokedle-api/v1';
@@ -41,7 +56,7 @@ if (isset($_SESSION['geracoes']))
 if (isset($_SESSION['geracao_contexto']))
   $geracao_contexto = $_SESSION['geracao_contexto'];
 
-if(isset($_POST['novo'])) {
+if(isset($_POST['geracoes'])) {
   $geracoes = $_POST['geracoes'];
   //var_dump($_POST);exit;
   if (isset($_POST['geracao_contexto']))
@@ -59,11 +74,7 @@ if(isset($_POST['novo'])) {
     //CURLOPT_COOKIE => 'PHPSESSID='.$_COOKIE['PHPSESSID']
   ]);
   $response = json_decode(curl_exec($curl));
-  //var_dump($response);
-  //echo '..postjogo<br>';
   curl_close($curl);
-  //var_dump($response);
-  //exit;
   if (!$response) {
     $_SESSION['mensagem'] = 'Erro na comunicação com o servidor: '.curl_error($curl);
     header('Location: index.php');
@@ -77,7 +88,7 @@ if(isset($_POST['novo'])) {
   }
 
   $_SESSION['seed'] = $response->seed;
-  $_SESSION['jogo'] = $response->jogo;
+  $_SESSION['modo'] = $response->modo;
   $_SESSION['geracoes'] = $response->geracoes;
   $_SESSION['geracao_contexto'] = $response->geracao_contexto;
   $seed = $_SESSION['seed'];
@@ -198,8 +209,6 @@ if (empty($_SESSION['descobriu'])) {
     //CURLOPT_COOKIE => 'PHPSESSID='.$_COOKIE['PHPSESSID']
   ]);
   $response = json_decode(curl_exec($curl));
-  //var_dump($response);
-  //echo '..getjogo<br>';
   curl_close($curl);
 
   if (!$response) {
