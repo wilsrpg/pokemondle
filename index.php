@@ -5,12 +5,12 @@ date_default_timezone_set('America/Sao_Paulo');
 require 'vendor/autoload.php';
 if (session_status() === 1)
   session_start();
-$seed = (int) date("Ymd");
+//$seed = (int) date("Ymd");
 
-if(isset($_SESSION['seed']) && $_SESSION['seed'] != date("Ymd"))
-  $_SESSION = [];
+//if(isset($_SESSION['seed']) && $_SESSION['seed'] != date("Ymd"))
+//  $_SESSION = [];
 
-if(isset($_POST['continuar']) && isset($_SESSION['modo'])) {
+if (isset($_POST['continuar']) && isset($_SESSION['modo'])) {
   if ($_SESSION['modo'] == 'pokemon')
     header('Location: pokedle.php');
   else if ($_SESSION['modo'] == 'tecnica')
@@ -18,8 +18,11 @@ if(isset($_POST['continuar']) && isset($_SESSION['modo'])) {
   die();
 }
 
-if(isset($_POST['excluir']))
+if (isset($_POST['excluir'])) {
   $_SESSION = [];
+  header('Location: index.php');
+  die();
+}
 ?>
 
 <!DOCTYPE html>
@@ -69,7 +72,7 @@ Pokédle+Gerações
   <label for="todas">Todas</label>
   <input type="hidden" name="geracoes" id="geracoes" />
   <br>
-  Geração do contexto:
+  Geração base:
   <label title="<?php
     echo 'A geração que vai determinar os tipos e evoluções. Por exemplo, se a geração for 1, Magnemite não será'
       .' do tipo metálico, pois esse tipo ainda não existia na 1ª geração. Da mesma forma, a técnica Bite não será'
@@ -91,6 +94,10 @@ Pokédle+Gerações
     echo '<option value="'.($i+1).'">'.($i+1).' ('.$jogos[$i].')</option>';
   ?>
   </select>
+  <br>
+  Seed (opcional):
+  <br>
+  <input type="date" name="data" value="<?php echo date('Y-m-d'); ?>" />
   <br><br>
   <input type="submit" name="novo" value="Iniciar novo jogo">
   <!--<input type="submit" formaction="pokedle.php" name="novo" value="Novo jogo - Pokémon">

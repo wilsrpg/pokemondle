@@ -8,9 +8,16 @@ if (isset($_POST['voltar'])) {
   die();
 }
 
+if (isset($_POST['data']) && $_POST['data'] > date("Y-m-d")) {
+  $_SESSION['mensagem'] = 'Não é permitido jogar no futuro.';
+  header('Location: index.php');
+  die();
+}
+  
 if (empty($_POST['geracoes'])) {
   //if (isset($_SESSION['seed']) && $_SESSION['seed'] != date("Ymd")) {
   //  unset($_SESSION);
+  //  $_SESSION['mensagem'] = 'Havia um jogo em andamento.';
   //  header('Location: index.php');
   //  die();
   //}
@@ -38,9 +45,12 @@ $geracao_contexto = '';
 $palpites = [];
 $tecnicas = [];
 $descobriu = false;
-$dicas = [false, false];
-$qtde_palpites_pra_revelar_dica_1 = 7;
-$qtde_palpites_pra_revelar_dica_2 = 12;
+$dicas = [
+  ['dica' => '', 'revelada' => false, 'durante_o_jogo' => false],
+  ['dica' => '', 'revelada' => false, 'durante_o_jogo' => false]
+];
+$qtde_palpites_pra_revelar_dica_1 = 4;
+$qtde_palpites_pra_revelar_dica_2 = 8;
 
 $palpite = '';
 $erro = '';
@@ -60,22 +70,27 @@ if (isset($_SESSION['geracoes']))
 if (isset($_SESSION['geracao_contexto']))
   $geracao_contexto = $_SESSION['geracao_contexto'];
 
-if (isset($_SESSION['dicas_reveladas']))
-  $dicas = $_SESSION['dicas_reveladas'];
+  if (isset($_SESSION['dicas']))
+  $dicas = $_SESSION['dicas'];
 
 if (isset($_POST['dica'])) {
-  $n = $_POST['dica'];
-  //var_dump($n);
-  if (isset($_SESSION['dicas'][$n])) {
-    $_SESSION['dicas_reveladas'][$n] = ['durante_o_jogo' => !$descobriu];
-    $dicas = $_SESSION['dicas_reveladas'];
+  $n = (int) $_POST['dica'];
+  if ($n < 0 || $n > 1) {
+    $_SESSION['mensagem'] = 'Dica inexistente: "'.$_POST['dica'].'"';
+    die();
   }
+  $_SESSION['dicas'][$n]['revelada'] = true;
+  if (!$descobriu)
+    $_SESSION['dicas'][$n]['durante_o_jogo'] = true;
+  $dicas = $_SESSION['dicas'];
 }
 
 if(isset($_POST['geracoes'])) {
   $geracoes = $_POST['geracoes'];
   if (isset($_POST['geracao_contexto']))
     $geracao_contexto = $_POST['geracao_contexto'];
+  if (isset($_POST['data']))
+    $data = str_replace('-', '', $_POST['data']);
   $curl = curl_init();
   curl_setopt($curl, CURLOPT_COOKIEJAR, $cookieFile);  //tell cUrl where to write cookie data
   curl_setopt($curl, CURLOPT_COOKIEFILE, $cookieFile); //tell cUrl where to read cookie data from
@@ -83,7 +98,7 @@ if(isset($_POST['geracoes'])) {
     CURLOPT_RETURNTRANSFER => 1,
     CURLOPT_URL => $URL_BASE.'/jogo',
     CURLOPT_POST => 2,
-    CURLOPT_POSTFIELDS => ['geracoes' => $geracoes, 'geracao_contexto' => $geracao_contexto],
+    CURLOPT_POSTFIELDS => ['geracoes' => $geracoes, 'geracao_contexto' => $geracao_contexto, 'data' => $data],
     CURLOPT_TIMEOUT => $TIMEOUT,
     //CURLOPT_COOKIE => 'PHPSESSID='.$_COOKIE['PHPSESSID']
   ]);
@@ -111,9 +126,11 @@ if(isset($_POST['geracoes'])) {
   unset($_SESSION['palpites']);
   unset($_SESSION['tecnicas']);
   unset($_SESSION['descobriu']);
-  $_SESSION['dicas'] = $response->dicas;
-  $_SESSION['dicas_reveladas'] = [false, false];
-  $dicas = $_SESSION['dicas_reveladas'];
+  $_SESSION['dicas'] = [
+    ['dica' => $response->dicas[0], 'revelada' => false, 'durante_o_jogo' => false],
+    ['dica' => $response->dicas[1], 'revelada' => false, 'durante_o_jogo' => false]
+  ];
+  $dicas = $_SESSION['dicas'];
 }
 
 if (empty($_SESSION['tecnicas'])) {
@@ -264,8 +281,8 @@ seed: [<?php echo $seed; ?>], gerações: [<?php echo implode(',', $geracoes); ?
 
 <form id="form_palpite" action="pokedle-moves.php" method="POST" style="margin: 0.5rem 0;">
   <label for="palpite">Técnica:</label><br>
-  <input list="tecnicas" id="palpite" name="palpite" autofocus autocomplete="off"/>
-  <input type="submit" <?php if ($descobriu) echo 'disabled'; ?> value="Enviar">
+  <input id="palpite" list="tecnicas" name="palpite" autofocus autocomplete="off"/>
+  <input id="enviar" type="submit" <?php if ($descobriu) echo 'disabled'; ?> value="Enviar">
 </form>
 <?php echo $erro; ?>
 <br>
@@ -274,40 +291,34 @@ seed: [<?php echo $seed; ?>], gerações: [<?php echo implode(',', $geracoes); ?
 Palpites: <?php echo count($palpites); ?>
 <br>Dicas reveladas durante o jogo:
 <?php
-  echo ($dicas[0] && $dicas[0]['durante_o_jogo'] ? 'alvo' : '')
-    . ($dicas[0] && $dicas[0]['durante_o_jogo'] && $dicas[1] && $dicas[1]['durante_o_jogo'] ? ', ' : '')
-    . ($dicas[1] && $dicas[1]['durante_o_jogo'] ? 'descrição' : '')
-    . (!$dicas[0] && !$dicas[1] ? 'nenhuma' : '');
+  echo ($dicas[0]['durante_o_jogo'] ? 'alvo' : '')
+    . ($dicas[0]['durante_o_jogo'] && $dicas[1]['durante_o_jogo'] ? ', ' : '')
+    . ($dicas[1]['durante_o_jogo'] ? 'descrição' : '')
+    . (!$dicas[0]['durante_o_jogo'] && !$dicas[1]['durante_o_jogo'] ? 'nenhuma' : '');
 ?>
 <form action="pokedle-moves.php" method="POST">
 <?php
-//var_dump($_SESSION['dicas']);
-//var_dump($dicas);
-//if (count($dicas) > 0)
-  //for ($i=0; $i < count($dicas); $i++) {
-    //$i = $seed % count($dicas);
-    if (!$dicas[0]){
-      if (count($palpites) < $qtde_palpites_pra_revelar_dica_1 && !$descobriu)
-        echo '<button disabled>Revelar alvo da técnica em '
-          .($qtde_palpites_pra_revelar_dica_1 - count($palpites))
-          .' palpites</button>';
-      else
-        echo '<button type="submit" name="dica" value="'. 0 .'">Revelar alvo da técnica</button>';
-    } else if (isset($_SESSION['dicas'][0]))
-      echo 'Alvo: '.$_SESSION['dicas'][0];
+  if (!$dicas[0]['revelada']){
+    if (count($palpites) < $qtde_palpites_pra_revelar_dica_1 && !$descobriu)
+      echo '<button disabled>Revelar alvo da técnica em '
+        .($qtde_palpites_pra_revelar_dica_1 - count($palpites))
+        .' palpites</button>';
     else
-      echo '[alvo não encontrado]';
-  //}
+      echo '<button type="submit" name="dica" value="'. 0 .'">Revelar alvo da técnica</button>';
+  } else if ($_SESSION['dicas'][0]['dica'])
+    echo 'Alvo: '.$_SESSION['dicas'][0]['dica'];
+  else
+    echo '[alvo não encontrado]';
   echo '<br>';
-  if (!$dicas[1]){
+  if (!$dicas[1]['revelada']){
     if (count($palpites) < $qtde_palpites_pra_revelar_dica_2 && !$descobriu)
       echo '<button disabled>Revelar descrição em '
         .($qtde_palpites_pra_revelar_dica_2 - count($palpites))
         .' palpites</button>';
     else
       echo '<button type="submit" name="dica" value="'. 1 .'">Revelar descrição</button>';
-  } else if ($_SESSION['dicas'][1])
-    echo 'Descrição: '.$_SESSION['dicas'][1];
+  } else if ($_SESSION['dicas'][1]['dica'])
+    echo 'Descrição: '.$_SESSION['dicas'][1]['dica'];
   else
     echo '[descrição não encontrada]';
 ?>
@@ -321,6 +332,7 @@ Palpites: <?php echo count($palpites); ?>
   <th>Precisão</th>
   <th>PP</th>
   <th>Categoria</th>
+  <th>Alvo</th>
   <th>Afeta atributo</th>
   <th>Causa condição</th>
   <th>Cura o usuário</th>
@@ -344,6 +356,8 @@ foreach($palpites as $pp) {
     .($pp->pp_r === 2 ? '<' : ($pp->pp_r === 0 ? '>' : '')).($pp->pp).'</td>
     <td style="background-color: '.($pp->categoria_r ? 'lime' : 'red').';">'
     .$pp->categoria.'</td>
+    <td style="background-color: '.($pp->alvo_r ? 'lime' : 'red').';">'
+    .$pp->alvo.'</td>
     <td style="background-color: '.($pp->afeta_stat_r ? 'lime' : 'red').';">'
     .$pp->afeta_stat.'</td>
     <td style="background-color: '.($pp->causa_ailment_r ? 'lime' : 'red').';">'
@@ -377,7 +391,7 @@ foreach($palpites as $pp) {
     tecla = false;
   });
   document.getElementById('palpite').addEventListener('input', function (e) {
-    if (!tecla)
+    if (!tecla && !document.getElementById('enviar').disabled)
       document.getElementById('form_palpite').submit();
     tecla = false;
   });
