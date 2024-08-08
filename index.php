@@ -1,6 +1,6 @@
 <?php
 //header('Access-Control-Allow-Origin: *');
-//date_default_timezone_set('America/Sao_Paulo');
+date_default_timezone_set('America/Sao_Paulo');
 //echo session_id();
 require 'vendor/autoload.php';
 if (session_status() === 1)
@@ -8,7 +8,7 @@ if (session_status() === 1)
 $seed = (int) date("Ymd");
 
 if(isset($_SESSION['seed']) && $_SESSION['seed'] != date("Ymd"))
-  unset($_SESSION);
+  $_SESSION = [];
 
 if(isset($_POST['continuar']) && isset($_SESSION['modo'])) {
   if ($_SESSION['modo'] == 'pokemon')
@@ -18,9 +18,8 @@ if(isset($_POST['continuar']) && isset($_SESSION['modo'])) {
   die();
 }
 
-if(isset($_POST['excluir'])) {
-  unset($_SESSION);
-}
+if(isset($_POST['excluir']))
+  $_SESSION = [];
 ?>
 
 <!DOCTYPE html>
