@@ -70,7 +70,7 @@ if (isset($_SESSION['geracoes']))
 if (isset($_SESSION['geracao_contexto']))
   $geracao_contexto = $_SESSION['geracao_contexto'];
 
-  if (isset($_SESSION['dicas']))
+if (isset($_SESSION['dicas']))
   $dicas = $_SESSION['dicas'];
 
 if (isset($_POST['dica'])) {
@@ -291,7 +291,7 @@ seed: [<?php echo $seed; ?>], gerações: [<?php echo implode(',', $geracoes); ?
 Palpites: <?php echo count($palpites); ?>
 <br>Dicas reveladas durante o jogo:
 <?php
-  echo ($dicas[0]['durante_o_jogo'] ? 'alvo' : '')
+  echo ($dicas[0]['durante_o_jogo'] ? 'pokémon' : '')
     . ($dicas[0]['durante_o_jogo'] && $dicas[1]['durante_o_jogo'] ? ', ' : '')
     . ($dicas[1]['durante_o_jogo'] ? 'descrição' : '')
     . (!$dicas[0]['durante_o_jogo'] && !$dicas[1]['durante_o_jogo'] ? 'nenhuma' : '');
@@ -300,15 +300,15 @@ Palpites: <?php echo count($palpites); ?>
 <?php
   if (!$dicas[0]['revelada']){
     if (count($palpites) < $qtde_palpites_pra_revelar_dica_1 && !$descobriu)
-      echo '<button disabled>Revelar alvo da técnica em '
+      echo '<button disabled>Revelar um pokémon que pode aprender a técnica naturalmente em '
         .($qtde_palpites_pra_revelar_dica_1 - count($palpites))
         .' palpites</button>';
     else
-      echo '<button type="submit" name="dica" value="'. 0 .'">Revelar alvo da técnica</button>';
+      echo '<button type="submit" name="dica" value="'. 0 .'">Revelar um pokémon que pode aprender a técnica naturalmente</button>';
   } else if ($_SESSION['dicas'][0]['dica'])
-    echo 'Alvo: '.$_SESSION['dicas'][0]['dica'];
+    echo 'Pokémon que pode aprender naturalmente: '.$_SESSION['dicas'][0]['dica'];
   else
-    echo '[alvo não encontrado]';
+    echo '[informação não encontrada]';
   echo '<br>';
   if (!$dicas[1]['revelada']){
     if (count($palpites) < $qtde_palpites_pra_revelar_dica_2 && !$descobriu)
