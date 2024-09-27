@@ -32,10 +32,10 @@ if (empty($_POST['geracoes'])) {
   }
 }
 
-$URL_BASE = 'http://localhost/pokedle-api/pokedle-api/v1';
+$URL_BASE = 'http://localhost/pokemondle-api/pokemondle-api/v1';
 //$URL_BASE = 'https://wilsrpg.42web.io/pokedle-api/pokedle-api/v1';
 //$URL_BASE = 'http://wilsrpg.unaux.com/pokedle-api/v1';
-//$URL_BASE = 'https://wilsrpg.x10.mx/pokedle-api/v1';
+//$URL_BASE = 'https://pokemondle.x10.mx/pokemondle-api/v1';
 $TIMEOUT = 15;
 $cookieFile = getcwd().'/cookies/cookie.txt';
 
@@ -139,7 +139,7 @@ if(isset($_POST['geracoes'])) {
   ];
   $dicas = $_SESSION['dicas'];
   //var_dump($response);exit;
-  header('Location: pokedle.php');
+  header('Location: pokemondle.php');
   die();
 }
 
@@ -199,7 +199,7 @@ if (isset($_POST['palpite']) && $_SESSION['descobriu'] == false) {
     $pokemon = $response;
     array_push($_SESSION['palpites'], $pokemon);
     array_unshift($palpites, $pokemon);
-    header('Location: pokedle.php');
+    header('Location: pokemondle.php');
     die();
   }
 }
@@ -290,7 +290,7 @@ if (isset($pokemon->id_r) && $pokemon->id_r === 1) {
     <meta charset="UTF-8">
     <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pokédle+Gerações</title>
+    <title>Pokémondle</title>
   </head>
 <body>
 
@@ -301,14 +301,14 @@ foreach ($nomes as $p)
 ?>
 </datalist>
 
-Pokédle+<br>
+Pokémondle<br>
 Data do jogo: <?php echo $seed; ?>. Gerações: <?php echo implode(',', $geracoes); ?>. Geração base: <?php echo $geracao_contexto; ?>ª geração.<br>
 
-<form action="pokedle.php" method="POST">
+<form action="pokemondle.php" method="POST">
   <input type="submit" name="voltar" value="Voltar">
 </form>
 
-<form id="form_palpite" action="pokedle.php" method="POST" style="margin: 0.5rem 0;">
+<form id="form_palpite" action="pokemondle.php" method="POST" style="margin: 0.5rem 0;">
   <label for="palpite">Pokémon:</label><br>
   <input id="palpite" list="pokemons" name="palpite" autofocus autocomplete="off" />
   <input id="enviar" type="submit" <?php if ($descobriu) echo 'disabled'; ?> value="Enviar">
@@ -325,7 +325,7 @@ Palpites: <?php echo count($palpites); ?>
     . ($dicas[1]['durante_o_jogo'] ? 'ability' : '')
     . (!$dicas[0]['durante_o_jogo'] && !$dicas[1]['durante_o_jogo'] ? 'nenhuma' : '');
 ?>
-<form action="pokedle.php" method="POST">
+<form action="pokemondle.php" method="POST">
 <?php
   if (!$dicas[0]['revelada']){
     if (count($palpites) < $qtde_palpites_pra_revelar_dica_1 && !$descobriu)

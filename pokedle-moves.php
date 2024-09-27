@@ -32,10 +32,10 @@ if (empty($_POST['geracoes'])) {
   }
 }
 
-$URL_BASE = 'http://localhost/pokedle-api/pokedle-moves-api/v1';
+$URL_BASE = 'http://localhost/pokemondle-api/pokemondle-moves-api/v1';
 //$URL_BASE = 'https://wilsrpg.42web.io/pokedle-api/pokedle-moves-api/v1';
 //$URL_BASE = 'http://wilsrpg.unaux.com/pokedle-moves-api/v1';
-//$URL_BASE = 'https://wilsrpg.x10.mx/pokedle-moves-api/v1';
+//$URL_BASE = 'https://pokemondle.x10.mx/pokemondle-moves-api/v1';
 $TIMEOUT = 15;
 $cookieFile = getcwd().'/cookies/cookie.txt';
 
@@ -261,7 +261,7 @@ if (isset($tecnica->id_r) && $tecnica->id_r === 1) {
     <meta charset="UTF-8">
     <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pokédle+Gerações: Técnicas</title>
+    <title>Pokémondle: Técnicas</title>
   </head>
 <body>
 
@@ -272,14 +272,14 @@ foreach ($nomes as $p)
 ?>
 </datalist>
 
-Pokédle+: Técnicas<br>
+Pokémondle: Técnicas<br>
 seed: [<?php echo $seed; ?>], gerações: [<?php echo implode(',', $geracoes); ?>], contexto: [<?php echo $geracao_contexto; ?>ª geração]<br>
 
-<form action="pokedle-moves.php" method="POST">
+<form action="pokemondle-moves.php" method="POST">
   <input type="submit" name="voltar" value="Voltar">
 </form>
 
-<form id="form_palpite" action="pokedle-moves.php" method="POST" style="margin: 0.5rem 0;">
+<form id="form_palpite" action="pokemondle-moves.php" method="POST" style="margin: 0.5rem 0;">
   <label for="palpite">Técnica:</label><br>
   <input id="palpite" list="tecnicas" name="palpite" autofocus autocomplete="off"/>
   <input id="enviar" type="submit" <?php if ($descobriu) echo 'disabled'; ?> value="Enviar">
@@ -296,7 +296,7 @@ Palpites: <?php echo count($palpites); ?>
     . ($dicas[1]['durante_o_jogo'] ? 'descrição' : '')
     . (!$dicas[0]['durante_o_jogo'] && !$dicas[1]['durante_o_jogo'] ? 'nenhuma' : '');
 ?>
-<form action="pokedle-moves.php" method="POST">
+<form action="pokemondle-moves.php" method="POST">
 <?php
   if (!$dicas[0]['revelada']){
     if (count($palpites) < $qtde_palpites_pra_revelar_dica_1 && !$descobriu)

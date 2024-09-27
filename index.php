@@ -12,9 +12,9 @@ if (session_status() === 1)
 
 if (isset($_POST['continuar']) && isset($_SESSION['modo'])) {
   if ($_SESSION['modo'] == 'pokemon')
-    header('Location: pokedle.php');
+    header('Location: pokemondle.php');
   else if ($_SESSION['modo'] == 'tecnica')
-    header('Location: pokedle-moves.php');
+    header('Location: pokemondle-moves.php');
   die();
 }
 
@@ -31,13 +31,13 @@ if (isset($_POST['excluir'])) {
     <meta charset="UTF-8">
     <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pokédle+Gerações</title>
+    <title>Pokémondle</title>
   </head>
 <body>
 
-Pokédle+Gerações
+Pokémondle
 <br><br>
-<form id="jogo" method="POST" action="pokedle.php">
+<form id="jogo" method="POST" action="pokemondle.php">
   Selecione o modo de jogo:<br>
   <input type="radio" name="modo" id="pokemon" value="pokemon" onchange="atualizarModo()" checked />
   <label for="pokemon">Pokémon</label>
@@ -100,9 +100,9 @@ Pokédle+Gerações
   <input type="date" name="data" value="<?php echo date('Y-m-d'); ?>" />
   <br><br>
   <input type="submit" name="novo" value="Iniciar novo jogo">
-  <!--<input type="submit" formaction="pokedle.php" name="novo" value="Novo jogo - Pokémon">
+  <!--<input type="submit" formaction="pokemondle.php" name="novo" value="Novo jogo - Pokémon">
   <br>
-  <input type="submit" formaction="pokedle-moves.php" name="novo" value="Novo jogo - Técnica">-->
+  <input type="submit" formaction="pokemondle-moves.php" name="novo" value="Novo jogo - Técnica">-->
 </form>
 
 <form action="index.php" method="POST">
@@ -125,9 +125,9 @@ if (!empty($_SESSION['mensagem'])) {
 <script>
   function atualizarModo() {
     if (document.getElementById('pokemon').checked)
-      document.getElementById('jogo').action = 'pokedle.php';
+      document.getElementById('jogo').action = 'pokemondle.php';
     if (document.getElementById('tecnica').checked)
-      document.getElementById('jogo').action = 'pokedle-moves.php';
+      document.getElementById('jogo').action = 'pokemondle-moves.php';
   }
   
   function atualizarBotaoDeTodas() {
@@ -158,9 +158,9 @@ if (!empty($_SESSION['mensagem'])) {
 
   function iniciar() {
     if (document.getElementById('pokemon').checked)
-      document.getElementById('jogo').action = 'pokedle.php';
+      document.getElementById('jogo').action = 'pokemondle.php';
     if (document.getElementById('tecnica').checked)
-      document.getElementById('jogo').action = 'pokedle-moves.php';
+      document.getElementById('jogo').action = 'pokemondle-moves.php';
     
     let geracoes = [];
     for (let i=1; i <= 9; i++)
