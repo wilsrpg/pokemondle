@@ -402,18 +402,16 @@ foreach($palpites as $pp) {
 </body>
 
 <script>
-  let alterou,tecla;
+  let alterou,tecla,tkey;
   document.getElementById('palpite').addEventListener('keydown', function (e) {
-    if (e.keyCode >= 33 && e.keyCode <= 40)
-      tecla = false;
-    else
-      tecla = true;
+    tkey = e.key;
+    tecla = !(e.keyCode >= 33 && e.keyCode <= 40);
   });
   document.getElementById('palpite').addEventListener('click', function (e) {
     tecla = false;
   });
   document.getElementById('palpite').addEventListener('input', function (e) {
-    if (!tecla && !document.getElementById('enviar').disabled)
+    if ((!tecla || !tkey) && !document.getElementById('enviar').disabled)
       document.getElementById('form_palpite').submit();
     tecla = false;
   });
