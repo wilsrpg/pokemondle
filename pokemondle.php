@@ -32,7 +32,11 @@ if (empty($_POST['geracoes'])) {
   }
 }
 
-$URL_BASE = 'http://localhost/pokemondle-api/pokemondle-api/v1';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+$URL_BASE = $_ENV['ENDERECO_DO_SERVIDOR'].'/pokemondle-api/v1';
+
+//$URL_BASE = 'http://localhost/pokemondle-api/pokemondle-api/v1';
 //$URL_BASE = 'https://wilsrpg.42web.io/pokedle-api/pokedle-api/v1';
 //$URL_BASE = 'http://wilsrpg.unaux.com/pokedle-api/v1';
 //$URL_BASE = 'https://pokemondle.x10.mx/pokemondle-api/v1';
