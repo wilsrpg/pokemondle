@@ -373,7 +373,7 @@ foreach($palpites as $pp) {
   $pp = (object) $pp;
   echo '
   <tr>
-    <td><img src="'.$_SESSION['sprites'][array_search($pp->id,$_SESSION['ids'])].'"</td>
+    <td><img src="'.$_SESSION['sprites'][array_search($pp->id,$_SESSION['ids'])].'"></td>
     <td style="background-color: '.($pp->nome_r ? 'lime' : 'red').';">'
     .$pp->nome.'</td>
     <td style="background-color: '.($pp->tipo1_r === 1 ? 'lime' : ($pp->tipo1_r === 2 ? 'yellow' : 'red')).';">'
