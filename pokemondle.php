@@ -58,7 +58,7 @@ $qtde_palpites_pra_revelar_dica_2 = 8;
 
 $palpite = '';
 $erro = '';
-$pokemon = '';
+$pokemon = (object)[];
 $nomes = [];
 
 if (isset($_SESSION['seed']))
